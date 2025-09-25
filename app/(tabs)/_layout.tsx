@@ -20,6 +20,30 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
+          borderTopWidth: 0,
+          borderRadius: 24,
+          marginHorizontal: 16,
+          marginBottom: 16,
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.18,
+          shadowRadius: 16,
+          position: 'absolute',
+          left: 0,
+          right: 0,
+        },
+        tabBarItemStyle: {
+          borderRadius: 16,
+          marginHorizontal: 4,
+          paddingVertical: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 13,
+          fontWeight: '600',
+        },
+        tabBarIconStyle: {
+          marginBottom: 2,
         },
       }}
     >

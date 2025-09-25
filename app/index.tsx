@@ -325,17 +325,25 @@ export default function LoginScreen() {
         backgroundColor={isDark ? theme.colors.background : 'transparent'}
         translucent={!isDark}
       />
-
-      {/* Background */}
-      <View style={styles.background} />
-
+      {/* Gradient Background */}
+      <View style={styles.background}>
+        <LinearGradient
+          colors={
+            isDark
+              ? ['#232526', '#414345', '#0f2027']
+              : ['#e0eafc', '#cfdef3', '#f7faff']
+          }
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        />
+      </View>
       {/* Theme Toggle */}
       <Pressable onPress={toggleTheme} style={styles.themeToggle}>
         <View style={styles.themeToggleButton}>
           <Text style={styles.themeToggleText}>{isDark ? '☀️' : '🌙'}</Text>
         </View>
       </Pressable>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoidingView}
@@ -358,13 +366,17 @@ export default function LoginScreen() {
                 duration={20000}
                 style={styles.logoRing}
               />
-              <View style={styles.logoBlur}>
+              <BlurView
+                intensity={60}
+                tint={isDark ? 'dark' : 'light'}
+                style={styles.logoBlur}
+              >
                 <Image
                   source={require('../assets/images/icon.png')}
                   style={styles.logoImage}
                   resizeMode="contain"
                 />
-              </View>
+              </BlurView>
             </View>
 
             <Animatable.Text
@@ -398,7 +410,7 @@ export default function LoginScreen() {
                   authMode === 'login' && styles.activeToggleButton,
                 ]}
                 onPress={() => authMode !== 'login' && switchAuthMode()}
-                activeOpacity={0.7}
+                activeOpacity={0.8}
               >
                 <Text
                   style={[
@@ -415,7 +427,7 @@ export default function LoginScreen() {
                   authMode === 'signup' && styles.activeToggleButton,
                 ]}
                 onPress={() => authMode !== 'signup' && switchAuthMode()}
-                activeOpacity={0.7}
+                activeOpacity={0.8}
               >
                 <Text
                   style={[
@@ -565,7 +577,7 @@ const createStyles = (theme: any, isDark: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      backgroundColor: 'transparent',
     },
     background: {
       position: 'absolute',
@@ -573,32 +585,34 @@ const createStyles = (theme: any, isDark: boolean) =>
       right: 0,
       top: 0,
       bottom: 0,
-      backgroundColor: theme.colors.background,
+      zIndex: -1,
+    },
+    gradient: {
+      ...StyleSheet.absoluteFillObject,
+      zIndex: -2,
     },
     themeToggle: {
       position: 'absolute',
-      top: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 50,
-      right: 20,
+      top: StatusBar.currentHeight ? StatusBar.currentHeight + 16 : 56,
+      right: 24,
       zIndex: 1000,
     },
     themeToggleButton: {
-      width: 44,
-      height: 44,
-      borderRadius: 22,
-      backgroundColor: theme.colors.surface,
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor:
+        isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
       alignItems: 'center',
       justifyContent: 'center',
       shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.18,
+      shadowRadius: 4,
+      elevation: 6,
     },
     themeToggleText: {
-      fontSize: 18,
+      fontSize: 22,
     },
     keyboardAvoidingView: {
       flex: 1,
@@ -606,90 +620,92 @@ const createStyles = (theme: any, isDark: boolean) =>
     scrollContent: {
       flexGrow: 1,
       justifyContent: 'center',
-      paddingHorizontal: 24,
+      paddingHorizontal: 20,
       paddingTop: (StatusBar.currentHeight || 0) + 60,
       paddingBottom: 40,
     },
     header: {
       alignItems: 'center',
-      marginBottom: 40,
+      marginBottom: 36,
     },
     logoContainer: {
       position: 'relative',
-      width: 100,
-      height: 100,
+      width: 110,
+      height: 110,
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 24,
+      marginBottom: 20,
     },
     logoRing: {
       position: 'absolute',
-      width: 100,
-      height: 100,
-      borderRadius: 50,
+      width: 110,
+      height: 110,
+      borderRadius: 55,
       borderWidth: 2,
       borderColor: theme.colors.primary,
       borderStyle: 'dashed',
+      opacity: 0.7,
     },
     logoBlur: {
-      width: 70,
-      height: 70,
-      borderRadius: 35,
-      backgroundColor: theme.colors.surface,
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      overflow: 'hidden',
       alignItems: 'center',
       justifyContent: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 8,
+      backgroundColor:
+        isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.18,
+      shadowRadius: 12,
+      elevation: 12,
     },
     logoImage: {
-      width: 40,
-      height: 40,
+      width: 48,
+      height: 48,
     },
     title: {
-      fontSize: 32,
+      fontSize: 34,
       fontWeight: 'bold',
-      color: theme.colors.text,
+      color: theme.colors.primary,
       textAlign: 'center',
-      marginBottom: 8,
+      marginBottom: 6,
+      letterSpacing: 0.5,
     },
     subtitle: {
-      fontSize: 16,
+      fontSize: 17,
       color: theme.colors.textSecondary,
       textAlign: 'center',
+      marginBottom: 2,
     },
     toggleContainer: {
-      marginBottom: 32,
+      marginBottom: 28,
     },
     toggleButtons: {
       flexDirection: 'row',
-      backgroundColor: theme.colors.surface,
+      backgroundColor:
+        isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
       borderRadius: 25,
       padding: 4,
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: theme.colors.primary,
     },
     toggleButton: {
       flex: 1,
-      paddingVertical: 12,
+      paddingVertical: 13,
       paddingHorizontal: 24,
       borderRadius: 21,
       alignItems: 'center',
       justifyContent: 'center',
     },
     activeToggleButton: {
-      backgroundColor: '#3B82F6',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
+      backgroundColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
       shadowRadius: 4,
       elevation: 2,
     },
@@ -702,58 +718,67 @@ const createStyles = (theme: any, isDark: boolean) =>
       color: '#FFFFFF',
     },
     cardContainer: {
-      borderRadius: 24,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 10,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 20,
-      elevation: 10,
+      borderRadius: 28,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.22,
+      shadowRadius: 24,
+      elevation: 14,
+      backgroundColor: 'transparent',
     },
     authCard: {
-      backgroundColor: theme.colors.surface,
-      padding: 32,
-      borderRadius: 24,
+      backgroundColor:
+        isDark
+          ? 'rgba(30,30,30,0.85)'
+          : 'rgba(255,255,255,0.85)',
+      padding: 36,
+      borderRadius: 28,
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.18,
+      shadowRadius: 16,
+      elevation: 10,
     },
     cardTitle: {
-      fontSize: 28,
+      fontSize: 30,
       fontWeight: 'bold',
-      color: theme.colors.text,
+      color: theme.colors.primary,
       textAlign: 'center',
       marginBottom: 8,
+      letterSpacing: 0.5,
     },
     cardSubtitle: {
       fontSize: 16,
       color: theme.colors.textSecondary,
       textAlign: 'center',
-      marginBottom: 32,
+      marginBottom: 28,
     },
     formContainer: {
-      marginBottom: 24,
-    },
-    inputContainer: {
       marginBottom: 20,
     },
+    inputContainer: {
+      marginBottom: 18,
+    },
     buttonContainer: {
-      marginTop: 8,
+      marginTop: 10,
     },
     demoInfo: {
-      padding: 16,
+      padding: 14,
       borderRadius: 12,
-      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#F3F4F6',
+      backgroundColor:
+        isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.04)',
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: theme.colors.primary,
+      marginTop: 10,
     },
     demoTitle: {
       fontSize: 14,
       fontWeight: '600',
-      color: theme.colors.text,
+      color: theme.colors.primary,
       textAlign: 'center',
-      marginBottom: 4,
+      marginBottom: 2,
     },
     demoText: {
       fontSize: 12,
@@ -762,12 +787,13 @@ const createStyles = (theme: any, isDark: boolean) =>
       fontStyle: 'italic',
     },
     validationMessage: {
-      marginTop: 8,
+      marginTop: 7,
       paddingHorizontal: 12,
-      paddingVertical: 8,
+      paddingVertical: 7,
       borderRadius: 8,
       flexDirection: 'row',
       alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.08)',
     },
     validationText: {
       fontSize: 12,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { CreditCard, Smartphone } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
@@ -9,7 +10,7 @@ import { Card } from '@/components/Card';
 const rechargeAmounts = [5, 10, 20, 50, 100];
 
 export default function RechargeScreen() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const [cardNumber, setCardNumber] = useState('');
@@ -55,10 +56,18 @@ export default function RechargeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.background}>
+        <LinearGradient
+          colors={isDark ? ['#232526', '#414345', '#0f2027'] : ['#e0eafc', '#cfdef3', '#f7faff']}
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>Recharge</Text>
+          <Text style={[styles.title, { color: theme.colors.primary }]}>Recharge</Text>
           <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
             Top up your account or another number
           </Text>
@@ -137,7 +146,7 @@ export default function RechargeScreen() {
         </Card>
 
         <View style={styles.summary}>
-          <Text style={[styles.summaryTitle, { color: theme.colors.text }]}>Summary</Text>
+          <Text style={[styles.summaryTitle, { color: theme.colors.primary }]}>Summary</Text>
           <View style={styles.summaryRow}>
             <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
               Phone Number:
@@ -170,23 +179,48 @@ export default function RechargeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -2,
   },
   scrollContent: {
-    padding: 16,
+    padding: 20,
+    paddingBottom: 40,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: 28,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 6,
+    letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 2,
   },
   phoneCard: {
-    marginBottom: 16,
+    marginBottom: 18,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 10,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -199,7 +233,14 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   amountCard: {
-    marginBottom: 16,
+    marginBottom: 18,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 10,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   amountGrid: {
     flexDirection: 'row',
@@ -208,7 +249,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   paymentCard: {
-    marginBottom: 16,
+    marginBottom: 18,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 10,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   cardRow: {
     flexDirection: 'row',
@@ -218,12 +266,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   summary: {
-    marginBottom: 24,
+    marginBottom: 28,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
   },
   summaryTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+    color: '#3B82F6',
   },
   summaryRow: {
     flexDirection: 'row',

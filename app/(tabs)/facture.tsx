@@ -22,16 +22,29 @@ export default function FactureScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.background}>
+        {/* <LinearGradient
+          colors={isDark ? ['#232526', '#414345', '#0f2027'] : ['#e0eafc', '#cfdef3', '#f7faff']}
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        /> */}
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>Check Facture</Text>
+          <Text style={[styles.title, { color: theme.colors.primary }]}>Check Facture</Text>
           <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
             Verify the payment status of your facture
           </Text>
         </View>
 
-        <Card style={styles.phoneCard}>
+        <Card style={{
+          ...styles.phoneCard,
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+          borderWidth: 1,
+        }}>
           <View style={styles.cardHeader}>
             <FileText size={24} color={theme.colors.primary} />
             <Text style={[styles.cardTitle, { color: theme.colors.text }]}>Phone Number</Text>
@@ -46,11 +59,14 @@ export default function FactureScreen() {
         </Card>
 
         {factureStatus && (
-          <Card style={styles.resultCard}>
-            <Text style={[styles.resultTitle, { color: theme.colors.text }]}>Facture Status</Text>
-            <Text style={[styles.resultValue, { color: theme.colors.success }]}>
-              {factureStatus}
-            </Text>
+          <Card style={{
+            ...styles.resultCard,
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.success,
+            borderWidth: 1,
+          }}>
+            <Text style={[styles.resultTitle, { color: theme.colors.primary }]}>Facture Status</Text>
+            <Text style={[styles.resultValue, { color: theme.colors.success }]}>{factureStatus}</Text>
           </Card>
         )}
 
@@ -67,23 +83,48 @@ export default function FactureScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -2,
   },
   scrollContent: {
-    padding: 16,
+    padding: 20,
+    paddingBottom: 40,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: 28,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 6,
+    letterSpacing: 0.5,
+    color: '#3B82F6',
   },
   subtitle: {
     fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 2,
   },
   phoneCard: {
-    marginBottom: 16,
+    marginBottom: 18,
+    borderRadius: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -96,12 +137,20 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   resultCard: {
-    marginBottom: 16,
+    marginBottom: 18,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
   },
   resultTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 8,
+    color: '#3B82F6',
   },
   resultValue: {
     fontSize: 16,

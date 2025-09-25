@@ -21,6 +21,7 @@ import {
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Card } from '@/components/Card';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Message {
   id: string;
@@ -113,7 +114,7 @@ ${USSD_CODES_DATA}
 Please provide helpful and accurate responses based only on this data. Always double-check that you're providing the correct code from the list above.`;
 
 export default function AIScreen() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -474,13 +475,25 @@ export default function AIScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      <View style={styles.background}>
+        <LinearGradient
+          colors={
+            isDark
+              ? ['#232526', '#414345', '#0f2027']
+              : ['#e0eafc', '#cfdef3', '#f7faff']
+          }
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        />
+      </View>
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>
+          <Text style={[styles.title, { color: theme.colors.primary }]}>
             MyTT Assistant
           </Text>
 
@@ -535,7 +548,15 @@ export default function AIScreen() {
         <View
           style={[
             styles.inputContainer,
-            { backgroundColor: theme.colors.surface },
+            {
+              backgroundColor: 'rgba(255,255,255,0.85)',
+              borderRadius: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 4,
+            },
           ]}
         >
           <View style={styles.inputWrapper}>
@@ -579,6 +600,19 @@ export default function AIScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -2,
   },
   safeArea: {
     flex: 1,
@@ -588,11 +622,15 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.05)',
+    alignItems: 'center',
+    marginBottom: 4,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '700',
     marginBottom: 8,
+    color: '#3B82F6',
+    letterSpacing: 0.5,
   },
   statusContainer: {
     flexDirection: 'row',
@@ -631,31 +669,31 @@ const styles = StyleSheet.create({
   },
   userMessageContainer: {
     alignItems: 'flex-end',
-    paddingLeft: '20%', // Constrains user messages to 80% width
+    paddingLeft: '20%',
   },
   aiMessageContainer: {
     alignItems: 'flex-start',
-    paddingRight: '5%', // Allows AI messages to use 95% width
+    paddingRight: '5%',
   },
   messageBubble: {
     borderRadius: 20,
     padding: 16,
     minWidth: 80,
-    width: '100%', // Take full available width within container constraints
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  // Separate width styles for user and AI bubbles
-  userBubbleWidth: {
-    // User messages will be constrained by container paddingLeft
-  },
-  aiBubbleWidth: {
-    // AI messages will be constrained by container paddingRight
-  },
+  userBubbleWidth: {},
+  aiBubbleWidth: {},
   userBubble: {
     backgroundColor: '#007AFF',
     borderBottomRightRadius: 6,
   },
   aiBubble: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'rgba(255,255,255,0.85)',
     borderBottomLeftRadius: 6,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.05)',
@@ -706,6 +744,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.05)',
+    marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',

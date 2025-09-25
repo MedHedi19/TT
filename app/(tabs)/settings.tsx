@@ -6,6 +6,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SettingsScreen() {
   const { theme, isDark, toggleTheme } = useTheme();
@@ -65,19 +66,28 @@ export default function SettingsScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.background}>
+        <LinearGradient
+          colors={isDark ? ['#232526', '#414345', '#0f2027'] : ['#e0eafc', '#cfdef3', '#f7faff']}
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>Settings</Text>
+          <Text style={[styles.title, { color: theme.colors.primary }]}>
+            Settings
+          </Text>
           <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
             Manage your account and preferences
           </Text>
         </View>
-
         {user && (
           <Card style={styles.profileCard}>
             <View style={styles.profileHeader}>
-              <View style={[styles.profileAvatar, { backgroundColor: theme.colors.primary }]}>
+              <View style={[styles.profileAvatar, { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.18, shadowRadius: 12, elevation: 8 }] }>
                 <User size={32} color="#FFFFFF" />
               </View>
               <View style={styles.profileInfo}>
@@ -91,9 +101,10 @@ export default function SettingsScreen() {
             </View>
           </Card>
         )}
-
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Appearance</Text>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+            Appearance
+          </Text>
           <SettingItem
             icon={isDark ? <Moon size={20} color={theme.colors.textSecondary} /> : <Sun size={20} color={theme.colors.textSecondary} />}
             title="Dark Mode"
@@ -103,9 +114,10 @@ export default function SettingsScreen() {
             onPress={toggleTheme}
           />
         </View>
-
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+            Notifications
+          </Text>
           <SettingItem
             icon={<Bell size={20} color={theme.colors.textSecondary} />}
             title="Push Notifications"
@@ -114,9 +126,10 @@ export default function SettingsScreen() {
             switchValue={true}
           />
         </View>
-
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Security</Text>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+            Security
+          </Text>
           <SettingItem
             icon={<Shield size={20} color={theme.colors.textSecondary} />}
             title="Security Settings"
@@ -124,9 +137,10 @@ export default function SettingsScreen() {
             onPress={() => Alert.alert('Info', 'Security settings would be implemented here')}
           />
         </View>
-
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Support</Text>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+            Support
+          </Text>
           <SettingItem
             icon={<HelpCircle size={20} color={theme.colors.textSecondary} />}
             title="Help & Support"
@@ -134,7 +148,6 @@ export default function SettingsScreen() {
             onPress={() => Alert.alert('Info', 'Help & Support would be implemented here')}
           />
         </View>
-
         <View style={styles.logoutSection}>
           <Button
             title="Logout"
@@ -151,77 +164,113 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -2,
   },
   scrollContent: {
-    padding: 16,
+    padding: 20,
+    paddingBottom: 40,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: 28,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 6,
+    letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 2,
   },
   profileCard: {
-    marginBottom: 24,
+    marginBottom: 28,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 10,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 18,
   },
   profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    marginRight: 18,
   },
   profileInfo: {
     flex: 1,
   },
   profileName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     marginBottom: 2,
   },
   profilePhone: {
-    fontSize: 14,
+    fontSize: 15,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 28,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '600',
-    marginBottom: 12,
+    marginBottom: 14,
+    letterSpacing: 0.2,
   },
   settingItem: {
-    marginBottom: 8,
+    marginBottom: 10,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   settingContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 16,
   },
   settingIcon: {
-    marginRight: 12,
+    marginRight: 14,
   },
   settingText: {
     flex: 1,
   },
   settingTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '500',
     marginBottom: 2,
   },
   settingSubtitle: {
-    fontSize: 12,
+    fontSize: 13,
   },
   logoutSection: {
-    marginTop: 24,
+    marginTop: 32,
+    marginBottom: 16,
   },
 });

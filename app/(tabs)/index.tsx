@@ -42,7 +42,7 @@ interface ServiceCard {
 }
 
 export default function DashboardScreen() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const { user } = useAuth();
   const [refreshing, setRefreshing] = useState(false);
   const [balance] = useState(45.6);
@@ -195,9 +195,19 @@ export default function DashboardScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    <SafeAreaView style={[styles.container]}>
+      <View style={styles.background}>
+        <LinearGradient
+          colors={
+            isDark
+              ? ['#232526', '#414345', '#0f2027']
+              : ['#e0eafc', '#cfdef3', '#f7faff']
+          }
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        />
+      </View>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -227,7 +237,7 @@ export default function DashboardScreen() {
                 ? 'Afternoon'
                 : 'Evening'}
             </Text>
-            <Text style={[styles.userName, { color: theme.colors.text }]}>
+            <Text style={[styles.userName, { color: theme.colors.primary }]}>
               {user?.name || 'User'}
             </Text>
           </View>
@@ -248,7 +258,7 @@ export default function DashboardScreen() {
 
         {/* Quick Actions */}
         <Animatable.View animation="fadeInUp" delay={400} duration={800}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
             Quick Actions
           </Text>
           <View style={styles.quickActionsContainer}>
@@ -260,22 +270,12 @@ export default function DashboardScreen() {
                 duration={600}
               >
                 <TouchableOpacity
-                  style={[
-                    styles.quickActionCard,
-                    { backgroundColor: theme.colors.surface },
-                  ]}
+                  style={[styles.quickActionCard, { backgroundColor: 'rgba(255,255,255,0.85)' }]}
                   onPress={action.action}
                   activeOpacity={0.7}
                 >
                   <View style={styles.quickActionIcon}>{action.icon}</View>
-                  <Text
-                    style={[
-                      styles.quickActionTitle,
-                      { color: theme.colors.text },
-                    ]}
-                  >
-                    {action.title}
-                  </Text>
+                  <Text style={[styles.quickActionTitle, { color: theme.colors.text }]}>{action.title}</Text>
                 </TouchableOpacity>
               </Animatable.View>
             ))}
@@ -284,74 +284,47 @@ export default function DashboardScreen() {
 
         {/* Recent Activity */}
         <Animatable.View animation="fadeInUp" delay={600} duration={800}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
             Recent Activity
           </Text>
           <Card style={styles.activityCard}>
             <View style={styles.activityItem}>
-              <View
-                style={[styles.activityIcon, { backgroundColor: '#667eea' }]}
-              >
+              <View style={[styles.activityIcon, { backgroundColor: '#667eea' }]}>
                 <TrendingUp size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text
-                  style={[styles.activityTitle, { color: theme.colors.text }]}
-                >
+                <Text style={[styles.activityTitle, { color: theme.colors.text }]}>
                   Recharge Successful
                 </Text>
-                <Text
-                  style={[
-                    styles.activityTime,
-                    { color: theme.colors.textSecondary },
-                  ]}
-                >
+                <Text style={[styles.activityTime, { color: theme.colors.textSecondary }]}>
                   2 hours ago • 20.00 TND
                 </Text>
               </View>
             </View>
 
             <View style={styles.activityItem}>
-              <View
-                style={[styles.activityIcon, { backgroundColor: '#f093fb' }]}
-              >
+              <View style={[styles.activityIcon, { backgroundColor: '#f093fb' }]}>
                 <Activity size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text
-                  style={[styles.activityTitle, { color: theme.colors.text }]}
-                >
+                <Text style={[styles.activityTitle, { color: theme.colors.text }]}>
                   Data Plan Activated
                 </Text>
-                <Text
-                  style={[
-                    styles.activityTime,
-                    { color: theme.colors.textSecondary },
-                  ]}
-                >
+                <Text style={[styles.activityTime, { color: theme.colors.textSecondary }]}>
                   Yesterday • 5GB Monthly
                 </Text>
               </View>
             </View>
 
             <View style={styles.activityItem}>
-              <View
-                style={[styles.activityIcon, { backgroundColor: '#43e97b' }]}
-              >
+              <View style={[styles.activityIcon, { backgroundColor: '#43e97b' }]}>
                 <Gift size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text
-                  style={[styles.activityTitle, { color: theme.colors.text }]}
-                >
+                <Text style={[styles.activityTitle, { color: theme.colors.text }]}>
                   Bonus Minutes Added
                 </Text>
-                <Text
-                  style={[
-                    styles.activityTime,
-                    { color: theme.colors.textSecondary },
-                  ]}
-                >
+                <Text style={[styles.activityTime, { color: theme.colors.textSecondary }]}>
                   3 days ago • 100 minutes
                 </Text>
               </View>
@@ -366,28 +339,43 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -2,
   },
   scrollContent: {
-    padding: 16,
-    paddingTop: 24, // Added extra top padding
+    padding: 20,
+    paddingTop: 32,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32, // Increased bottom margin
-    marginTop: 16, // Added top margin for extra space
+    marginBottom: 36,
+    marginTop: 12,
   },
   greetingContainer: {
     flex: 1,
   },
   greeting: {
-    fontSize: 16,
+    fontSize: 17,
     marginBottom: 4,
   },
   userName: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
+    color: '#3B82F6',
   },
   notificationButton: {
     position: 'relative',
@@ -413,16 +401,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 32,
+    marginBottom: 36,
   },
   serviceCard: {
-    width: (width - 48) / 2,
-    marginBottom: 16,
+    width: (width - 56) / 2,
+    marginBottom: 18,
   },
   cardGradient: {
-    padding: 20,
-    borderRadius: 16,
-    minHeight: 140,
+    padding: 22,
+    borderRadius: 18,
+    minHeight: 150,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 10,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -434,18 +427,18 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
   },
   cardValue: {
     color: '#FFFFFF',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   cardSubtitle: {
     color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 12,
+    fontSize: 13,
   },
   progressContainer: {
     marginTop: 12,
@@ -462,38 +455,48 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 18,
+    color: '#3B82F6',
   },
   quickActionsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 32,
+    marginBottom: 36,
   },
   quickActionCard: {
-    width: (width - 48) / 2,
-    padding: 16,
-    borderRadius: 12,
+    width: (width - 56) / 2,
+    padding: 18,
+    borderRadius: 14,
     alignItems: 'center',
-    marginBottom: 12,
-    elevation: 2,
+    marginBottom: 14,
+    elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   quickActionIcon: {
     marginBottom: 8,
   },
   quickActionTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
   },
   activityCard: {
-    marginBottom: 24,
+    marginBottom: 28,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
   },
   activityItem: {
     flexDirection: 'row',
